@@ -1,0 +1,16 @@
+Package: csmsoil
+Type: Package
+Title: Pull and Prepare Soil Data for Crop Modeling
+Version: 0.1.0
+Author: Phillip D. Alderman
+Maintainer: Phillip D. Alderman <phillip.alderman@okstate.edu>
+Description: This package implements a collection of functions for
+    pulling soil data from public databases and preparing the data
+    for use with crop models. The package implements a range of
+    pedotransfer functions for converting commonly measured soil
+    variables into soil parameters suitable as inputs to cropping
+    system models.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.1
