@@ -1,0 +1,3 @@
+- Pull data from Table 3 of Saxton and Rawls (2006) for writing tests
+  to validate soil_saxton_*()
+- Incorporate other functions from sg2dssat.R: get.sldr(), get.hsg(), etc.
