@@ -27,38 +27,49 @@ for(.c in c("theta_s", "theta_33", "theta_1500")){
 # Convert from mm/h to cm/h
 table3[["Ks"]] <- table3[["Ks"]]/10
 
-expect_equal(
+actual <- table3[c("theta_s", "theta_33", "theta_1500", "Ks")]
+
+actual[["theta_1500"]] <-
   csmsoil::soil_saxton_slll(silt = 100 - table3[["sand"]] - table3[["clay"]],
                             clay = table3[["clay"]],
-                            soc = 2.5,
+                            soc = 2.5/1.72,
                             coarse_fraction = 0,
-                            bulk_density = table3[["matric_density"]]) |>
-    round(digits = 2),
+                            bulk_density = table3[["matric_density"]])
+
+expect_equal(
+  round(actual[["theta_1500"]], digits = 2),
     table3[["theta_1500"]])
 
-expect_equal(
-  csmsoil::soil_saxton_sdul(silt = 100 - table3[["sand"]] - table3[["clay"]],
+  actual[["theta_33"]] <-
+    csmsoil::soil_saxton_sdul(silt = 100 - table3[["sand"]] - table3[["clay"]],
                             clay = table3[["clay"]],
-                            soc = 2.5,
+                            soc = 2.5/1.72,
                             coarse_fraction = 0,
-                            bulk_density = table3[["matric_density"]]) |>
-    round(digits = 2),
-  table3[["theta_33"]])
+                            bulk_density = table3[["matric_density"]])
+
+    expect_equal(
+      round(actual[["theta_33"]], digits = 2),
+      table3[["theta_33"]])
+
+    actual[["theta_s"]] <-
+      csmsoil::soil_saxton_ssat(silt = 100 - table3[["sand"]] - table3[["clay"]],
+                                clay = table3[["clay"]],
+                                soc = 2.5/1.72,
+                                coarse_fraction = 0,
+                                bulk_density = table3[["matric_density"]])
+
+    expect_equal(
+      round(actual[["theta_s"]], digits = 2),
+      table3[["theta_s"]])
+
+    actual[["Ks"]] <-
+      csmsoil::soil_saxton_ssks(theta_s = actual[["theta_s"]],
+                                theta_33 = actual[["theta_33"]],
+                                theta_1500 = actual[["theta_1500"]],
+                                coarse_fraction = 0,
+                                bulk_density = table3[["matric_density"]])
 
 expect_equal(
-  csmsoil::soil_saxton_ssat(silt = 100 - table3[["sand"]] - table3[["clay"]],
-                            clay = table3[["clay"]],
-                            soc = 2.5,
-                            coarse_fraction = 0,
-                            bulk_density = table3[["matric_density"]]) |>
-    round(digits = 2),
-  table3[["theta_s"]])
-
-expect_equal(
-  csmsoil::soil_saxton_ssks(theta_s = table3[["theta_s"]],
-                            theta_33 = table3[["theta_33"]],
-                            theta_1500 = table3[["theta_1500"]],
-                            coarse_fraction = 0,
-                            bulk_density = table3[["matric_density"]]) |>
-    round(digits = 2),
+  round(actual[["Ks"]], digits = 2),
   table3[["Ks"]])
+

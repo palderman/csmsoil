@@ -25,11 +25,12 @@ soil_saxton_ssat <- function(silt, clay, soc, bulk_density,
                              coarse_fraction){
   sand <- 1 - silt/100 - clay/100
   clay <- clay/100
-  theta_33t <- -0.251*sand + 0.195*clay + 0.011*soc + 0.006*sand*soc -
-    0.027*clay*soc + 0.452*sand*clay + 0.299
+  som <- soc*1.72
+  theta_33t <- -0.251*sand + 0.195*clay + 0.011*som + 0.006*sand*som -
+    0.027*clay*som + 0.452*sand*clay + 0.299
   theta_33 <- theta_33t + 1.283*(theta_33t)^2 - 0.374*theta_33t - 0.015
-  theta_S33t = 0.278*sand + 0.034*clay + 0.022*soc - 0.018*sand*soc -
-    0.027*clay*soc - 0.584*sand*clay + 0.078
+  theta_S33t = 0.278*sand + 0.034*clay + 0.022*som - 0.018*sand*som -
+    0.027*clay*som - 0.584*sand*clay + 0.078
   theta_S33 = theta_S33t + 0.636*theta_S33t-0.107
   theta_S <- theta_33 + theta_S33 - 0.097*sand + 0.043
   a <- bulk_density/2.65
