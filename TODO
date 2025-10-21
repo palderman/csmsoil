@@ -1,3 +1,2 @@
-- Pull data from Table 3 of Saxton and Rawls (2006) for writing tests
-  to validate soil_saxton_*()
+- Rename functions following convention of soil_dl_*(), soil_ptf_*()
 - Incorporate other functions from sg2dssat.R: get.sldr(), get.hsg(), etc.
