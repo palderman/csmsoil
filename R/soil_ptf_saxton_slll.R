@@ -17,8 +17,8 @@
 #' @param coarse_fraction volumetric fraction of coarse  (> 2mm diameter)
 #'  fragments (cm^3 cm^{-3})
 #'
-soil_saxton_slll <- function(silt, clay, soc, bulk_density,
-                             coarse_fraction){
+soil_ptf_saxton_slll <- function(silt, clay, soc, bulk_density,
+                                 coarse_fraction){
   sand <- 1 - silt/100 - clay/100
   clay <- clay/100
   som <- soc*1.72

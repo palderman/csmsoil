@@ -21,8 +21,8 @@
 #'  # soil density. If TRUE apply the adjustment, if FALSE (default) do
 #'  # not apply the adjustment.
 #'
-soil_saxton_ssat <- function(silt, clay, soc, bulk_density,
-                             coarse_fraction){
+soil_ptf_saxton_sdul <- function(silt, clay, soc, bulk_density,
+                                 coarse_fraction){
   sand <- 1 - silt/100 - clay/100
   clay <- clay/100
   som <- soc*1.72
@@ -35,15 +35,15 @@ soil_saxton_ssat <- function(silt, clay, soc, bulk_density,
   theta_S <- theta_33 + theta_S33 - 0.097*sand + 0.043
   a <- bulk_density/2.65
   Rv <- (a*coarse_fraction)/(1-coarse_fraction*(1-a))
-  theta_S <- theta_33 + theta_S33 - 0.097*sand + 0.043
   # The following is commented out until we can identify where the DF
   # comes from and when the adjustment would apply:
   # if(density_adjustment){
   #    bulk_density_adj <- bulk_density*DF
   #    theta_SDF <- 1-(bulk_density_adj/2.65)
-  #    ssat <- theta.SDF*(1-Rv)
+  #    theta_33DF <- theta_33 - 0.2*(theta_S-theta_SDF)
+  #    sdul <- theta.33DF*(1-Rv)
   # }else{
-  ssat <- theta_S*(1-Rv)
+    sdul <- theta_33*(1-Rv)
   # }
-  return(ssat)
+  return(sdul)
 }
