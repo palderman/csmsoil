@@ -1,3 +1,2 @@
-- Rename functions following convention of soil_dl_*(), soil_ptf_*()
-- add HWSD as data source for drainage class and HSG
-- Incorporate other functions from sg2dssat.R: get.sldr(), get.hsg(), etc.
+-
+- Incorporate other functions from sg2dssat.R: get.slro(), get.slu1() etc.
