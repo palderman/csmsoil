@@ -30,7 +30,7 @@ table3[["Ks"]] <- table3[["Ks"]]/10
 actual <- table3[c("theta_s", "theta_33", "theta_1500", "Ks")]
 
 actual[["theta_1500"]] <-
-  csmsoil::soil_saxton_slll(silt = 100 - table3[["sand"]] - table3[["clay"]],
+  csmsoil::soil_ptf_saxton_slll(silt = 100 - table3[["sand"]] - table3[["clay"]],
                             clay = table3[["clay"]],
                             soc = 2.5/1.72,
                             coarse_fraction = 0,
@@ -41,7 +41,7 @@ expect_equal(
     table3[["theta_1500"]])
 
   actual[["theta_33"]] <-
-    csmsoil::soil_saxton_sdul(silt = 100 - table3[["sand"]] - table3[["clay"]],
+    csmsoil::soil_ptf_saxton_sdul(silt = 100 - table3[["sand"]] - table3[["clay"]],
                             clay = table3[["clay"]],
                             soc = 2.5/1.72,
                             coarse_fraction = 0,
@@ -52,7 +52,7 @@ expect_equal(
       table3[["theta_33"]])
 
     actual[["theta_s"]] <-
-      csmsoil::soil_saxton_ssat(silt = 100 - table3[["sand"]] - table3[["clay"]],
+      csmsoil::soil_ptf_saxton_ssat(silt = 100 - table3[["sand"]] - table3[["clay"]],
                                 clay = table3[["clay"]],
                                 soc = 2.5/1.72,
                                 coarse_fraction = 0,
@@ -63,7 +63,7 @@ expect_equal(
       table3[["theta_s"]])
 
     actual[["Ks"]] <-
-      csmsoil::soil_saxton_ssks(theta_s = actual[["theta_s"]],
+      csmsoil::soil_ptf_saxton_ssks(theta_s = actual[["theta_s"]],
                                 theta_33 = actual[["theta_33"]],
                                 theta_1500 = actual[["theta_1500"]],
                                 coarse_fraction = 0,
