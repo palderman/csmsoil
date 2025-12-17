@@ -47,7 +47,7 @@ soil_ptf_nrcs_hsg <- function(ksat, depth){
                               fun = min)
       sl_depth <- terra::app(depth, fun = max)
     }
-  }else if(is.numeric(ssks)){
+  }else if(is.numeric(ksat)){
     if(any(depth > 50)){
       gt50_index <- which(depth > 50) |> min()
       ksat_50 <- min(ksat[1:gt50_index])
