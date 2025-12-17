@@ -1,2 +1,6 @@
--
-- Incorporate other functions from sg2dssat.R: get.slro(), get.slu1() etc.
+- Incorporate other functions from sg2dssat.R:
+- Add citation/table to function documentation for soil_ptf_hwsd_sldr() and
+  soil_ptf_curve_number()
+- Implement tests using SpatRaster inputs for soil_ptf_nrcs_hsg(),
+  soil_ptf_curve_number() and soil_ptf_slu1()
+- Implement tests using vector inputs for soil_ptf_slu1()

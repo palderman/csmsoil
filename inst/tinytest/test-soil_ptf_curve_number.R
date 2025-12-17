@@ -1,5 +1,18 @@
 library(tinytest)
 
+##############################
+# tests for SpatRaster inputs:
+##############################
+
+# test for missing terra package
+
+# Create 4 x 4 SpatRaster inputs that correspond to the 16 conditions tested
+# under the vector inputs below
+
+##########################
+# Tests for vector inputs:
+##########################
+
 expect_equal(
   csmsoil::soil_ptf_curve_number(slope = 1, hsg = 1),
   61
