@@ -15,19 +15,25 @@
 soil_ptf_nrcs_hsg <- function(ssks, depth){
 
   if("SpatRaster" %in% class(ssks)){
-    gt50_index <- terra::app(depth,
-                             fun = \(.x) which(.x > 50) |> min())
-    gt100_index <- terra::app(depth,
-                              fun = \(.x) which(.x > 100) |> min())
-    ksat_50 <- terra::rapp(ksat,
-                           first = 1,
-                           last = gt50_index,
-                           fun = min)
-    ksat_100 <- terra::rapp(ksat,
-                            first = 1,
-                            last = gt100_index,
-                            fun = min)
-    sl_depth <- terra::app(depth, fun = max)
+    if(!requireNamespace("terra")){
+      stop("The terra package is required to use soil_ptf_nrcs_hsg() with input
+           data of class SpatRaster. Please use install.packages(\"terra\")
+           to install terra and try again.")
+    }else{
+      gt50_index <- terra::app(depth,
+                               fun = \(.x) which(.x > 50) |> min())
+      gt100_index <- terra::app(depth,
+                                fun = \(.x) which(.x > 100) |> min())
+      ksat_50 <- terra::rapp(ksat,
+                             first = 1,
+                             last = gt50_index,
+                             fun = min)
+      ksat_100 <- terra::rapp(ksat,
+                              first = 1,
+                              last = gt100_index,
+                              fun = min)
+      sl_depth <- terra::app(depth, fun = max)
+    }
   }else if(is.numeric(ssks)){
     gt50_index <- which(depth > 50) |> min()
     gt100_index <- which(depth > 100) |> min()
