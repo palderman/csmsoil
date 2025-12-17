@@ -4,17 +4,17 @@
 #'  with depth and the method described in Chapter 7 - "Hydrologic Soil
 #'   Groups" of the NRCS Part 630 National Engineering Handbook (2009)
 #'
-#' @param ssks a vector or SpatRaster with saturated hydraulic
+#' @param ksat a vector or SpatRaster with saturated hydraulic
 #'  conductivity values in units of cm per hour
 #'
 #' @param depth a vector or SpatRaster with dimensions
-#'  corresponding to ssks with the depth to the base of soil layer
+#'  corresponding to ksat with the depth to the base of soil layer
 #'
 #' @export
 #'
-soil_ptf_nrcs_hsg <- function(ssks, depth){
+soil_ptf_nrcs_hsg <- function(ksat, depth){
 
-  if("SpatRaster" %in% class(ssks)){
+  if("SpatRaster" %in% class(ksat)){
     if(!requireNamespace("terra")){
       stop("The terra package is required to use soil_ptf_nrcs_hsg() with input
            data of class SpatRaster. Please use install.packages(\"terra\")
@@ -37,8 +37,8 @@ soil_ptf_nrcs_hsg <- function(ssks, depth){
   }else if(is.numeric(ssks)){
     gt50_index <- which(depth > 50) |> min()
     gt100_index <- which(depth > 100) |> min()
-    ksat_50 <- min(ssks[1:gt50_index])
-    ksat_100 <- min(ssks[1:gt100_index])
+    ksat_50 <- min(ksat[1:gt50_index])
+    ksat_100 <- min(ksat[1:gt100_index])
     sl_depth <- max(depth)
   }
 
