@@ -2,7 +2,8 @@
 #'
 #' Determine hydrologic soil group (HSG) based on saturated conductivity
 #'  with depth and the method described in Chapter 7 - "Hydrologic Soil
-#'   Groups" of the NRCS Part 630 National Engineering Handbook (2009)
+#'  Groups" of the NRCS Part 630 National Engineering Handbook (2009). The
+#'  current implementation assumes the absence of a high water table.
 #'
 #' @param ksat a vector or SpatRaster with saturated hydraulic
 #'  conductivity values in units of cm per hour
@@ -64,14 +65,14 @@ soil_ptf_nrcs_hsg <- function(ksat, depth){
 
   hsg <- ksat_50
   # multiply ksat thresholds by 0.36 to convert original units (um/s) to cm/hr:
-  hsg[ksat_50 > 40*0.36 & sl_depth > 50] <- 1
-  hsg[ksat_100 > 10*0.36 & sl_depth >= 100]  <- 1
-  hsg[ksat_50 <= 40*0.36 & ksat_50 > 10*0.36 & sl_depth > 50] <- 2
-  hsg[ksat_100 <= 10*0.36 & ksat_100 > 4*0.36 & sl_depth >= 100] <- 2
-  hsg[ksat_50 <= 10*0.36 & ksat_50 > 1*0.36 & sl_depth > 50] <- 3
-  hsg[ksat_100 <= 4*0.36 & ksat_100 > 0.4*0.36 & sl_depth >= 100]  <- 3
-  hsg[ksat_50 <= 1*0.36 | sl_depth <= 50] <- 4
-  hsg[ksat_100 <= 0.4*0.36 & sl_depth >= 100]  <- 4
+  hsg[ksat_50 > 40*0.36 & sl_depth > 50 & sl_depth <= 100] <- 1
+  hsg[ksat_100 > 10*0.36 & sl_depth > 100]  <- 1
+  hsg[ksat_50 <= 40*0.36 & ksat_50 > 10*0.36 & sl_depth > 50 & sl_depth <= 100] <- 2
+  hsg[ksat_100 <= 10*0.36 & ksat_100 > 4*0.36 & sl_depth > 100] <- 2
+  hsg[ksat_50 <= 10*0.36 & ksat_50 > 1*0.36 & sl_depth > 50 & sl_depth <= 100] <- 3
+  hsg[ksat_100 <= 4*0.36 & ksat_100 > 0.4*0.36 & sl_depth > 100]  <- 3
+  hsg[(ksat_50 <= 1*0.36 & sl_depth > 50 & sl_depth <= 100)| sl_depth < 50] <- 4
+  hsg[ksat_100 <= 0.4*0.36 & sl_depth > 100]  <- 4
 
   hsg
 }
