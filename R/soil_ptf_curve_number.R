@@ -1,9 +1,10 @@
 #' Determine curve number
 #'
 #' Determine soil conservation service (SCS) curve number for antecedent
-#'  water condition II based on saturated conductivity
-#'  with depth and the method described in Chapter 7 - "Hydrologic Soil
-#'   Groups" of the NRCS Part 630 National Engineering Handbook (2009)
+#'  water condition II (AWCII) based on saturated conductivity
+#'  with depth and the methods described in Chapter 7 - "Hydrologic Soil
+#'   Groups" of the NRCS Part 630 National Engineering Handbook (2009) and the
+#'   DSSAT SBuild documentation <INSERT CITATION OR TABLE>
 #'
 #' @param ksat a vector or SpatRaster with saturated hydraulic conductivity
 #'  values in units of cm per hour (optional if the hsg argument is provided).

@@ -2,7 +2,8 @@
 #'
 #' Determine soil drainage parameter (SLDR) based on the drainage
 #'  class as defined in the Harmonized World Soil Database (HWSD)
-#'  for a given world resources based (WRB) number
+#'  for a given world resources based (WRB) number and the lookup table
+#'  documented in SBuild <INSERT CITATION OR TABLE>
 #'
 #' @param wrb_number the world resources based (WRB) number for soil types
 #'
