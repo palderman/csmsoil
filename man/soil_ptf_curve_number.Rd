@@ -4,21 +4,21 @@
 \alias{soil_ptf_curve_number}
 \title{Determine curve number}
 \usage{
-soil_ptf_curve_number(ksat, depth, slope, hsg)
+soil_ptf_curve_number(slope, hsg, ksat, depth)
 }
 \arguments{
+\item{slope}{a vector or SpatRaster with slope values in units of percent}
+
+\item{hsg}{a vector or SpatRaster of hydrologic soil group values
+(unitless). If not provided the hsg will be determined based on the values
+provided by ksat and depth.}
+
 \item{ksat}{a vector or SpatRaster with saturated hydraulic conductivity
 values in units of cm per hour (optional if the hsg argument is provided).}
 
 \item{depth}{a vector or SpatRaster with dimensions corresponding to ksat
 with the depth to the base of soil layer (optional if the hsg argument is
 provided).}
-
-\item{slope}{a vector or SpatRaster with slope values in units of percent}
-
-\item{hsg}{an optional vector or SpatRaster of hydrologic soil group values
-(unitless). If not provided the hsg will be determined based on the values
-provided by ksat and depth.}
 }
 \description{
 Determine soil conservation service (SCS) curve number for antecedent

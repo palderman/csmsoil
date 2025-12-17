@@ -6,6 +6,12 @@
 #'   Groups" of the NRCS Part 630 National Engineering Handbook (2009) and the
 #'   DSSAT SBuild documentation <INSERT CITATION OR TABLE>
 #'
+#' @param slope a vector or SpatRaster with slope values in units of percent
+#'
+#' @param hsg a vector or SpatRaster of hydrologic soil group values
+#'  (unitless). If not provided the hsg will be determined based on the values
+#'  provided by ksat and depth.
+#'
 #' @param ksat a vector or SpatRaster with saturated hydraulic conductivity
 #'  values in units of cm per hour (optional if the hsg argument is provided).
 #'
@@ -13,15 +19,9 @@
 #'  with the depth to the base of soil layer (optional if the hsg argument is
 #'  provided).
 #'
-#' @param slope a vector or SpatRaster with slope values in units of percent
-#'
-#' @param hsg an optional vector or SpatRaster of hydrologic soil group values
-#'  (unitless). If not provided the hsg will be determined based on the values
-#'  provided by ksat and depth.
-#'
 #' @export
 #'
-soil_ptf_curve_number <- function(ksat, depth, slope, hsg){
+soil_ptf_curve_number <- function(slope, hsg, ksat, depth){
 
   if(missing(hsg)){
     hsg <- soil_ptf_nrcs_hsg(ksat, depth)
