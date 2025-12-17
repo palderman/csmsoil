@@ -4,10 +4,18 @@
 \alias{soil_ptf_nrcs_hsg}
 \title{Determine hydrologic soil group}
 \usage{
-soil_ptf_nrcs_hsg(ssks, depth)
+soil_ptf_nrcs_hsg(ksat, depth)
+}
+\arguments{
+\item{ksat}{a vector or SpatRaster with saturated hydraulic
+conductivity values in units of cm per hour}
+
+\item{depth}{a vector or SpatRaster with dimensions
+corresponding to ksat with the depth to the base of soil layer}
 }
 \description{
 Determine hydrologic soil group (HSG) based on saturated conductivity
  with depth and the method described in Chapter 7 - "Hydrologic Soil
-  Groups" of the NRCS Part 630 National Engineering Handbook (2009)
+ Groups" of the NRCS Part 630 National Engineering Handbook (2009). The
+ current implementation assumes the absence of a high water table.
 }
