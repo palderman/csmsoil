@@ -229,9 +229,3 @@ nc.dssat.soil <- function(file.name='ok_soilgrids.nc',mask=NULL,res='1km',chirps
 #    nc_close(nc)
 
 }
-
-get.slu1 <- function(fc,wp,slb){
-    require(raster)
-    return(150*(stackApply(fc,rep(1,nlayers(fc)),fun=sum)/nlayers(fc)-
-          0.5*stackApply(wp,rep(1,nlayers(wp)),fun=sum)/nlayers(wp)))
-}
