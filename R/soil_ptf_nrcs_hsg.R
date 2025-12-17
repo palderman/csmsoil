@@ -21,9 +21,21 @@ soil_ptf_nrcs_hsg <- function(ksat, depth){
            to install terra and try again.")
     }else{
       gt50_index <- terra::app(depth,
-                               fun = \(.x) which(.x > 50) |> min())
+                               fun = \(.x){
+                                 if(any(.x > 50)){
+                                   which(.x > 50) |> min()
+                                 }else{
+                                   length(.x)
+                                 }
+                               })
       gt100_index <- terra::app(depth,
-                                fun = \(.x) which(.x > 100) |> min())
+                                fun = \(.x){
+                                  if(any(.x > 100)){
+                                    which(.x > 100) |> min()
+                                  }else{
+                                    length(.x)
+                                  }
+                                  })
       ksat_50 <- terra::rapp(ksat,
                              first = 1,
                              last = gt50_index,
@@ -35,10 +47,18 @@ soil_ptf_nrcs_hsg <- function(ksat, depth){
       sl_depth <- terra::app(depth, fun = max)
     }
   }else if(is.numeric(ssks)){
-    gt50_index <- which(depth > 50) |> min()
-    gt100_index <- which(depth > 100) |> min()
-    ksat_50 <- min(ksat[1:gt50_index])
-    ksat_100 <- min(ksat[1:gt100_index])
+    if(any(depth > 50)){
+      gt50_index <- which(depth > 50) |> min()
+      ksat_50 <- min(ksat[1:gt50_index])
+    }else{
+      ksat_50 <- min(ksat)
+    }
+    if(any(depth > 100)){
+      gt100_index <- which(depth > 100) |> min()
+      ksat_100 <- min(ksat[1:gt100_index])
+    }else{
+      ksat_100 <- min(ksat)
+    }
     sl_depth <- max(depth)
   }
 
