@@ -3,3 +3,5 @@
 sticker/*
 ^LICENSE\.md$
 raw_data
+^\.positai$
+^\.claude$
