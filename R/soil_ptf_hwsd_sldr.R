@@ -17,7 +17,7 @@ soil_ptf_hwsd_sldr <- function(wrb_number){
     data.frame(wrb_number = wrb_number[]) |>
     # wrb_table stored as internal data:
     within({
-      wrb_row_index = ifelse(wrb_number == 255, NA_integer_, wrb_number)
+      wrb_row_index = ifelse(is.na(wrb_number) | wrb_number == 255, NA_integer_, wrb_number)
       wrb_row_index = wrb_row_index + 1
     }) |>
     with({
