@@ -21,6 +21,7 @@ soil_ptf_saxton_ssks <- function(theta_s, theta_33, theta_1500,
                                  coarse_fraction, bulk_density){
   lambda <- (log(theta_33)-log(theta_1500))/(log(1500)-log(33))
   Ks <- 1930*(theta_s-theta_33)^(3-lambda)
-  Kb <- Ks*(1-coarse_fraction)/(1-coarse_fraction*(1-3*(bulk_density/2.65)/2))/10
+  alpha <- ((bulk_density-(coarse_fraction*2.65))/(1 - coarse_fraction))/2.65
+  Kb <- Ks*(1-coarse_fraction)/(1-coarse_fraction*(1-3*alpha/2))/10
   return(Kb)
 }
