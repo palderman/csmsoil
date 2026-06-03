@@ -1,49 +1,64 @@
 #' Determine stage 1 soil evaporation limit
 #'
-#' Determine the stage 1 soil evaporation limit as half the difference between
-#'  the saturated volumetric soil water and permanent wilting point weighted by
-#'  layer thickness and summed across the first 15-cm of the soil profile.
+#' Determine the stage 1 soil evaporation limit following Ritchie et al. (1989)
+#'  based on sand, silt and clay percentage in the first 15-cm of the soil
+#'  profile.
 #'
-#' @param sat a vector or SpatRaster with saturated volumetric soil water in
-#'  units of cm^3 cm^-3
+#' @param silt a vector or SpatRaster with percent silt content
 #'
-#' @param pwp a vector or SpatRaster with permanent wilting point values as
-#'  volumetric soil water in units of cm^3 cm^-3
+#' @param clay a vector or SpatRaster with percent clay content
 #'
-#' @param depth a vector or SpatRaster with dimensions corresponding to sat and
-#'  pwp with the depth to the base of soil layer
+#' @param depth a vector or SpatRaster with dimensions corresponding to silt and
+#'  clay with the depth to the base of soil layer
 #'
 #' @export
 #'
-soil_ptf_slu1 <- function(sat, pwp, depth){
+soil_ptf_slu1 <- function(silt, clay, depth){
 
-  if("SpatRaster" %in% class(sat)){
+  sand = 100 - silt - clay
+
+  if("SpatRaster" %in% class(silt)){
     if(!requireNamespace("terra")){
       stop("The terra package is required to use soil_ptf_slu1() with input
            data of class SpatRaster. Please use install.packages(\"terra\")
            to install terra and try again.")
     }else{
-      diff_r <- (sat - pwp)/2
-      slu1 <- terra::xapp(diff_r, depth,
-                          fun = \(.diff, .depth){
+      clay <- terra::xapp(clay, depth,
+                          fun = \(.clay, .depth){
                             if(any(.depth > 15)){
                               .lyr_gt15 <- which(.depth > 15) |> min()
                               .diff[1:.lyr_gt15]
                               .depth <- .depth[1:.lyr_gt15]
                               .depth[.lyr_gt15] <- 15
                             }
-                            sum(.diff*diff(c(0, .depth))*10)
+                            sum(.clay*diff(c(0, .depth))/sum(.depth))
                           })
+      silt <- terra::xapp(silt, depth,
+                          fun = \(.silt, .depth){
+                            if(any(.depth > 15)){
+                              .lyr_gt15 <- which(.depth > 15) |> min()
+                              .diff[1:.lyr_gt15]
+                              .depth <- .depth[1:.lyr_gt15]
+                              .depth[.lyr_gt15] <- 15
+                            }
+                            sum(.silt*diff(c(0, .depth))/sum(.depth))
+                          })
+      sand <- 100 - silt - clay
     }
-  }else if(is.numeric(sat)){
+  }else if(is.numeric(silt)){
     if(any(depth > 15)){
       lyr_gt15 <- which(depth > 15) |> min()
-      sat <- sat[1:lyr_gt15]
-      pwp <- pwp[1:lyr_gt15]
+      sand <- sand[1:lyr_gt15]
+      clay <- clay[1:lyr_gt15]
       depth <- depth[1:lyr_gt15]
       depth[lyr_gt15] <- 15
     }
-    slu1 <- sum((sat - pwp)/2*diff(c(0, depth))*10)
+    sand <- sum(sand*diff(c(0, depth))/sum(depth))
+    clay <- sum(clay*diff(c(0, depth))/sum(depth))
   }
+  slu1 <- sand
+  slu1[clay < 50 & sand < 80] <- 8 + 0.08*clay
+  slu1[clay >= 50] <- 11 - 0.06 * clay
+  slu1[sand >= 80] <- 20 - 0.15 * sand
   return(slu1)
 }

@@ -4,19 +4,18 @@
 \alias{soil_ptf_slu1}
 \title{Determine stage 1 soil evaporation limit}
 \usage{
-soil_ptf_slu1(fc, pwp, depth)
+soil_ptf_slu1(silt, clay, depth)
 }
 \arguments{
-\item{fc}{a vector or SpatRaster with field capacity values as volumetric
-soil water in units of cm^3 cm^-3}
+\item{silt}{a vector or SpatRaster with percent silt content}
 
-\item{pwp}{a vector or SpatRaster with permanent wilting point values as
-volumetric soil water in units of cm^3 cm^-3}
+\item{clay}{a vector or SpatRaster with percent clay content}
 
-\item{depth}{a vector or SpatRaster with dimensions corresponding to fc and
-pwp with the depth to the base of soil layer}
+\item{depth}{a vector or SpatRaster with dimensions corresponding to silt and
+clay with the depth to the base of soil layer}
 }
 \description{
-Determine the stage 1 soil evaporation limit based on field capacity,
- permanent wilting point and soil depth
+Determine the stage 1 soil evaporation limit following Ritchie et al. (1989)
+ based on sand, silt and clay percentage in the first 15-cm of the soil
+ profile.
 }
