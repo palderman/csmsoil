@@ -30,12 +30,11 @@
 #'
 #' @importFrom stringr str_c str_detect
 #' @importFrom dplyr "%>%" mutate select full_join filter pull group_by
-#'     arrange summarize_all
+#' @importFrom dplyr arrange summarize_all
 #' @importFrom tibble tibble
 #' @importFrom soilDB SDA_query
 #' @importFrom tidyr replace_na fill
-#' @importFrom sf st_point st_is st_geometry st_transform st_set_crs
-#'   st_sfc
+#' @importFrom sf st_point st_is st_geometry st_transform st_set_crs st_sfc
 #'
 #'
 pull_profile_by_name <- function(soil_name, state = "", county = "",
@@ -68,7 +67,7 @@ pull_profile_by_name <- function(soil_name, state = "", county = "",
     str_c("pt_geom is missing a coordinate reference system (CRS). Assuming\n",
           "  that CRS is WGS84 Latitude and Longitude") %>%
       warning()
-    pt_geom <- pt_geom %>% 
+    pt_geom <- pt_geom %>%
       # Assume WGS84 for lat and long
       st_set_crs("+proj=longlat +datum=WGS84")
   }
@@ -164,7 +163,7 @@ pull_profile_by_name <- function(soil_name, state = "", county = "",
 
   # Query horizon data for each cokey
   horizon_tbl <- mukey_out %>%
-    gen_horiz_query() %>% 
+    gen_horiz_query() %>%
     SDA_query()
 
   soil <- sda_to_dssat_tbl(comp_tbl, horizon_tbl, state, pt_geom)
@@ -183,8 +182,8 @@ pull_profile_by_name <- function(soil_name, state = "", county = "",
 #' @importFrom stringr str_c
 #' @importFrom dplyr "%>%" filter pull row_number
 #' @importFrom soilDB SDA_query processSDA_WKT
-#' @importFrom sf st_as_sf st_point st_sfc st_nearest_feature st_crs st_transform
-#'   st_as_text st_buffer
+#' @importFrom sf st_as_sf st_point st_sfc st_nearest_feature st_crs
+#' @importFrom sf st_transform st_as_text st_buffer
 #'
 filter_mukey_by_coord <- function(mukey_tbl, pt_geom, soil_name){
 
@@ -282,9 +281,9 @@ filter_mukey_by_coord <- function(mukey_tbl, pt_geom, soil_name){
 #' @export
 #'
 #' @importFrom stringr str_c str_detect str_replace_all str_pad
-#'   str_to_upper str_sub
+#' @importFrom stringr str_to_upper str_sub
 #' @importFrom dplyr "%>%" rename mutate group_by select summarize_all arrange
-#'   full_join pull ungroup
+#' @importFrom dplyr full_join pull ungroup
 #' @importFrom tidyr replace_na fill
 #' @importFrom DSSAT as_DSSAT_tbl
 #' @importFrom sf st_coordinates
@@ -406,7 +405,7 @@ sda_to_dssat_tbl <- function(comp_tbl, horizon_tbl, site, pt_geom){
 #' @importFrom stringr str_c
 calc_ssat <- function(h_tbl){
 
-  ssat_tbl <- h_tbl %>% 
+  ssat_tbl <- h_tbl %>%
     mutate(# Fill missing values in particle density with default value of 2.65
            partdensity = coalesce(partdensity, 2.65),
            # Set dbtenthbar_r to NA if wtenthbar_r is NA
@@ -423,49 +422,49 @@ calc_ssat <- function(h_tbl){
            ssat = coalesce(ssat_wsat, ssat_tenth, ssat_third))
 
   # Check for missing ssat values
-  if({ssat_tbl %>% 
-        pull(ssat) %>% 
-        is.na() %>% 
+  if({ssat_tbl %>%
+        pull(ssat) %>%
+        is.na() %>%
         any()}){
-    
+
     str_c("Missing values present in SSAT. Will attempt to fill\n",
           "  using dbovendry_r from SSURGO. Per SSURGO documentation,\n",
           "  dbovendry_r excludes desiccation cracks in its calculation\n",
           "  of bulk density and, thus, may vastly underestimate SSAT\n",
           "  for soils with high shrink/swell potential. Please check\n",
-          "  output for errant SSAT values.") %>% 
+          "  output for errant SSAT values.") %>%
       warning()
-    
-    ssat_tbl <- ssat_tbl %>% 
+
+    ssat_tbl <- ssat_tbl %>%
       mutate(# SSAT as 95% pore space estimated from oven dry bulk density
              #   (per SSURGO documentation dbovendry_r excludes volume of
              #    desiccation cracks)
              ssat_dry = 0.95*(1-dbovendry_r/partdensity),
              ssat = coalesce(ssat, ssat_dry))
   }
-  ssat <- ssat_tbl %>% 
+  ssat <- ssat_tbl %>%
     pull(ssat)
-  
+
   return(ssat)
 }
 
 #' @importFrom dplyr "%>%" mutate coalesce pull
 calc_sdul <- function(h_tbl){
-  sdul <- h_tbl %>% 
+  sdul <- h_tbl %>%
     mutate(# Determine if layer is coarsely textured:
            coarse = is_coarse(sandtotal_r, silttotal_r, claytotal_r),
            # Convert percent wthirdbar to fraction
            wthird = wthirdbar_r/100,
-           # Fill missing values in wtenthbar with wthirdbar 
-           wtenth = coalesce(wtenthbar_r/100, wthird), 
-           sdul = ifelse(coarse, wtenth, wthird)) %>% 
+           # Fill missing values in wtenthbar with wthirdbar
+           wtenth = coalesce(wtenthbar_r/100, wthird),
+           sdul = ifelse(coarse, wtenth, wthird)) %>%
     pull(sdul)
-  
+
   return(sdul)
 }
 
 is_coarse <- function(sand, silt, clay){
-  coarse <- 
+  coarse <-
     # Sand
     (sand >= 85 & (silt+1.5*clay) <= 15) |
     # Loamy Sand
@@ -480,35 +479,35 @@ is_coarse <- function(sand, silt, clay){
 #' @importFrom dplyr "%>%" mutate coalesce pull
 #' @importFrom stringr str_c
 calc_sbdm <- function(h_tbl){
-  
-  sbdm_tbl <- h_tbl %>% 
+
+  sbdm_tbl <- h_tbl %>%
     mutate(# Order of preference from left to right
       sbdm = coalesce(dbtenthbar_r, dbthirdbar_r))
-  
+
   # Check for missing ssat values
-  if({sbdm_tbl %>% 
-      pull(sbdm) %>% 
-      is.na() %>% 
+  if({sbdm_tbl %>%
+      pull(sbdm) %>%
+      is.na() %>%
       any()}){
-    
+
     str_c("Missing values present in SBDM. Will attempt to fill\n",
           "  using dbovendry_r from SSURGO. Per SSURGO documentation,\n",
           "  dbovendry_r excludes desiccation cracks in its calculation\n",
           "  of bulk density and, thus, may vastly overestimate SBDM\n",
           "  for soils with high shrink/swell potential. Please check\n",
-          "  output for errant values.") %>% 
+          "  output for errant values.") %>%
       warning()
-    
-    sbdm_tbl <- sbdm_tbl %>% 
+
+    sbdm_tbl <- sbdm_tbl %>%
       mutate(
         #   (per SSURGO documentation dbovendry_r excludes volume of
         #    desiccation cracks)
         sbdm = coalesce(sbdm, dbovendry_r))
   }
-  
-  sbdm <- sbdm_tbl %>% 
+
+  sbdm <- sbdm_tbl %>%
     pull(sbdm)
-  
+
   return(sbdm)
 }
 
@@ -589,7 +588,7 @@ pull_profile_by_coords <- function(pt_geom = NULL,
     str_c("pt_geom is missing a coordinate reference system (CRS). Assuming\n",
           "  that CRS is WGS84 Latitude and Longitude") %>%
       warning()
-    pt_geom <- pt_geom %>% 
+    pt_geom <- pt_geom %>%
       # Assume WGS84 for lat and long
       st_set_crs("+proj=longlat +datum=WGS84")
   }
@@ -698,7 +697,7 @@ pull_profile_by_coords <- function(pt_geom = NULL,
 
   # Query horizon data for each cokey
   horizon_tbl <- comp_tbl %>%
-    gen_horiz_query() %>% 
+    gen_horiz_query() %>%
     SDA_query()
 
   soil <- sda_to_dssat_tbl(comp_tbl, horizon_tbl, site, pt_geom)
@@ -708,10 +707,10 @@ pull_profile_by_coords <- function(pt_geom = NULL,
 
 #' @importFrom stringr str_c
 #' @importFrom dplyr "%>%" pull
-#' 
+#'
 gen_horiz_query <- function(comp_tbl){
 
-  query <- comp_tbl %>% 
+  query <- comp_tbl %>%
     pull(cokey) %>%
     str_c("'",.,"'") %>%
     str_c(collapse=",") %>%

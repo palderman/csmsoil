@@ -19,8 +19,8 @@
 #'
 #' soil_align_depths(soil_depth, new_depths)
 #'
-#' @importFrom dplyr tibble "%>%" full_join arrange rename_all group_by mutate mutate_at
-#'   select
+#' @importFrom dplyr tibble "%>%" full_join arrange rename_all group_by mutate
+#' @importFrom dplyr mutate_at select
 #' @importFrom stringr str_remove
 #' @importFrom tidyr fill
 #'
