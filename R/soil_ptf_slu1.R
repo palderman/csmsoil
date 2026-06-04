@@ -27,7 +27,6 @@ soil_ptf_slu1 <- function(silt, clay, depth){
                           fun = \(.clay, .depth){
                             if(any(.depth > 15)){
                               .lyr_gt15 <- which(.depth > 15) |> min()
-                              .diff[1:.lyr_gt15]
                               .depth <- .depth[1:.lyr_gt15]
                               .depth[.lyr_gt15] <- 15
                             }
@@ -37,7 +36,6 @@ soil_ptf_slu1 <- function(silt, clay, depth){
                           fun = \(.silt, .depth){
                             if(any(.depth > 15)){
                               .lyr_gt15 <- which(.depth > 15) |> min()
-                              .diff[1:.lyr_gt15]
                               .depth <- .depth[1:.lyr_gt15]
                               .depth[.lyr_gt15] <- 15
                             }
